@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoClip Workspace — Project Clipper Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            bgmain: '#090d16',
+            card: '#111827',
+            card2: '#182235',
+            accent: '#6366f1',
+            cyanacc: '#22d3ee'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-bgmain text-slate-100 min-h-screen antialiased">
+  <!-- Top Bar -->
+  <header class="border-b border-slate-800 bg-card/80 backdrop-blur sticky top-0 z-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-400 text-slate-950 font-extrabold flex items-center justify-center shrink-0">
+          AC
+        </div>
+        <div class="truncate">
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-white truncate">AutoClip Project Studio</span>
+            <span class="text-[11px] px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
+              9:16 Ready
+            </span>
+          </div>
+          <p class="text-xs text-slate-400 truncate">Kelola klip, timestamp, hook, dan render FFmpeg</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 text-xs">
+        <span class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
+          Klip Tersimpan: <strong id="clipCount" class="text-cyan-300">0</strong>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-7 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    <!-- Left Column: Source & Clip Builder (5 cols) -->
+    <section class="lg:col-span-5 space-y-6">
+      <!-- Video Source Card -->
+      <div class="rounded-2xl bg-card border border-slate-800 p-5 space-y-4">
+        <h2 class="text-base font-bold text-white">1. Sumber Video & Mode</h2>
+        <div>
+          <label for="srcUrl" class="block text-xs font-medium text-slate-400 mb-1">URL Video Sumber</label>
+          <input
+            id="srcUrl"
+            type="url"
+            placeholder="https://www.youtube.com/watch?v=..."
+            class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400"
+          />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="clipMode" class="block text-xs font-medium text-slate-400 mb-1">Mode Klip</label>
+            <select id="clipMode" class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3 py-2.5 text-xs text-white focus:outline-none focus:border-indigo-400">
+              <option value="Highlight">Highlight / Viral Clip</option>
+              <option value="Story Recap">Story Recap</option>
+              <option value="Sports Highlight">Sports Highlight</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="hookStyle" class="block text-xs font-medium text-slate-400 mb-1">Template Hook</label>
+            <select id="hookStyle" class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3 py-2.5 text-xs text-white focus:outline-none focus:border-indigo-400">
+              <option value="None">Tanpa Hook</option>
+              <option value="Breaking News">Breaking News</option>
+              <option value="Typewriter">Typewriter</option>
+              <option value="Quote">Quote Highlight</option>
+              <option value="Scoreboard">Papan Skor</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Clip Segment Form -->
+      <form id="addClipForm" class="rounded-2xl bg-card border border-slate-800 p-5 space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-base font-bold text-white">2. Tambah Segmen Klip</h2>
+          <span class="text-[11px] text-slate-400">1080×1920</span>
+        </div>
+
+        <div>
+          <label for="clipTitle" class="block text-xs font-medium text-slate-400 mb-1">Judul / Hook Teks Klip</label>
+          <input
+            id="clipTitle"
+            type="text"
+            required
+            placeholder="Contoh: Bagian paling plot twist di menit awal"
+            class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400"
+          />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="startSec" class="block text-xs font-medium text-slate-400 mb-1">Mulai (detik)</label>
+            <input id="startSec" type="number" min="0" value="15" required class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2 text-sm text-white" />
+          </div>
+          <div>
+            <label for="durationSec" class="block text-xs font-medium text-slate-400 mb-1">Durasi (detik)</label>
+            <input id="durationSec" type="number" min="1" max="600" value="45" required class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2 text-sm text-white" />
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-500 hover:opacity-95 text-slate-950 font-bold text-sm py-2.5 transition cursor-pointer"
+        >
+          + Tambahkan ke Daftar Klip Proyek
+        </button>
+      </form>
+    </section>
+
+    <!-- Right Column: Generated Clips List & Export (7 cols) -->
+    <section class="lg:col-span-7 rounded-2xl bg-card border border-slate-800 p-5 sm:p-6 space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
+        <div>
+          <h2 class="text-lg font-bold text-white">Daftar Klip dalam Proyek</h2>
+          <p class="text-xs text-slate-400">Kelola klip, salin perintah render/CLI, atau ekspor konfigurasi JSON.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="exportJsonBtn" type="button" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-medium text-slate-200 cursor-pointer">
+            Ekspor JSON
+          </button>
+          <button id="clearAllBtn" type="button" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-rose-950/50 border border-slate-700 text-xs font-medium text-rose-300 cursor-pointer">
+            Reset
+          </button>
+        </div>
+      </div>
+
+      <div id="clipsContainer" class="space-y-3">
+        <div class="rounded-xl bg-slate-950/70 border border-dashed border-slate-800 p-8 text-center text-sm text-slate-500">
+          Belum ada klip di proyek ini. Tambahkan klip pertama di panel kiri.
+        </div>
+      </div>
+
+      <!-- Command / JSON Output Box -->
+      <div id="outputBox" class="hidden rounded-xl bg-slate-950 border border-slate-800 p-4 space-y-2">
+        <div id="outputLabel" class="text-xs font-semibold text-cyan-300"></div>
+        <pre id="outputContent" class="text-xs font-mono text-slate-300 overflow-x-auto whitespace-pre-wrap"></pre>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const STORAGE_KEY = 'autoclip_project_workspace_v1';
+    const clipsContainer = document.getElementById('clipsContainer');
+    const clipCount = document.getElementById('clipCount');
+    const addClipForm = document.getElementById('addClipForm');
+    const outputBox = document.getElementById('outputBox');
+    const outputLabel = document.getElementById('outputLabel');
+    const outputContent = document.getElementById('outputContent');
+    const exportJsonBtn = document.getElementById('exportJsonBtn');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+
+    function loadClips() {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    }
+
+    function saveClips(list) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      renderClips();
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, (m) => ({
+        '&': '&', '<': '<', '>': '>', '"': '"', "'": '''
+      }[m]));
+    }
+
+    function renderClips() {
+      const clips = loadClips();
+      clipCount.textContent = String(clips.length);
+
+      if (!clips.length) {
+        clipsContainer.innerHTML = `
+          <div class="rounded-xl bg-slate-950/70 border border-dashed border-slate-800 p-8 text-center text-sm text-slate-500">
+            Belum ada klip di proyek ini. Tambahkan klip pertama di panel kiri.
+          </div>`;
+        return;
+      }
+
+      clipsContainer.innerHTML = clips.map((clip, idx) => {
+        const endSec = Number(clip.start) + Number(clip.duration);
+        return `
+          <article class="rounded-xl bg-card2 border border-slate-800 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="space-y-1 min-w-0">
+              <div class="flex flex-wrap items-center gap-2 text-[11px]">
+                <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-semibold">#${idx + 1}</span>
+                <span class="text-cyan-300 font-mono">${clip.start}s → ${endSec}s (${clip.duration}s)</span>
+                <span class="text-slate-400">• ${escapeHtml(clip.mode)}</span>
+                <span class="text-slate-400">• Hook: ${escapeHtml(clip.hook)}</span>
+              </div>
+              <h3 class="text-sm font-bold text-white truncate">${escapeHtml(clip.title)}</h3>
+              <p class="text-xs text-slate-400 truncate">${escapeHtml(clip.url || 'URL belum diisi')}</p>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                onclick="showCli(${idx})"
+                class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-medium text-cyan-300 cursor-pointer"
+              >
+                Perintah Run
+              </button>
+              <button
+                type="button"
+                onclick="deleteClip(${idx})"
+                class="px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-rose-950/60 border border-slate-700 text-xs text-rose-300 cursor-pointer"
+              >
+                Hapus
+              </button>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    window.deleteClip = function(idx) {
+      const clips = loadClips();
+      clips.splice(idx, 1);
+      saveClips(clips);
+    };
+
+    window.showCli = function(idx) {
+      const clips = loadClips();
+      const c = clips[idx];
+      if (!c) return;
+      outputBox.classList.remove('hidden');
+      outputLabel.textContent = `Perintah GitHub CLI untuk Klip #${idx + 1}:`;
+      outputContent.textContent = `gh workflow run main.yml -f video_url="${c.url}" -f mulai_detik="${c.start}" -f durasi="${c.duration}"`;
+    };
+
+    addClipForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const url = document.getElementById('srcUrl').value.trim();
+      const mode = document.getElementById('clipMode').value;
+      const hook = document.getElementById('hookStyle').value;
+      const title = document.getElementById('clipTitle').value.trim();
+      const start = Math.max(0, parseInt(document.getElementById('startSec').value || '0', 10));
+      const duration = Math.max(1, parseInt(document.getElementById('durationSec').value || '45', 10));
+
+      const clips = loadClips();
+      clips.unshift({ url, mode, hook, title, start, duration });
+      saveClips(clips);
+      document.getElementById('clipTitle').value = '';
+    });
+
+    exportJsonBtn.addEventListener('click', () => {
+      const clips = loadClips();
+      outputBox.classList.remove('hidden');
+      outputLabel.textContent = 'Ekspor Konfigurasi Proyek (JSON):';
+      outputContent.textContent = JSON.stringify({
+        source_url: document.getElementById('srcUrl').value.trim(),
+        clips
+      }, null, 2);
+    });
+
+    clearAllBtn.addEventListener('click', () => {
+      localStorage.removeItem(STORAGE_KEY);
+      renderClips();
+      outputBox.classList.add('hidden');
+    });
+
+    renderClips();
+  </script>
+</body>
+</html>
