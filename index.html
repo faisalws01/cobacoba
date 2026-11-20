@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AutoClip Workspace — 9:16 Studio</title>
+  <title>Klip Studio — Potong Video Jadi Klip Vertikal 9:16</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -11,221 +11,284 @@
       theme: {
         extend: {
           colors: {
-            bgmain: '#090d16',
-            card: '#111827',
-            card2: '#182235'
+            bgdark: '#070b14',
+            surface: '#0f172a',
+            surface2: '#162036',
+            primary: '#f59e0b',
+            secondary: '#38bdf8'
           }
         }
       }
     }
   </script>
 </head>
-<body class="bg-bgmain text-slate-100 min-h-screen antialiased">
-  <header class="border-b border-slate-800 bg-card/80 backdrop-blur sticky top-0 z-20">
+<body class="bg-bgdark text-slate-100 min-h-screen antialiased selection:bg-amber-400/20">
+  <!-- Navbar -->
+  <header class="sticky top-0 z-30 border-b border-slate-800/80 bg-bgdark/85 backdrop-blur">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-      <div class="flex items-center gap-3 min-w-0">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-400 text-slate-950 font-extrabold flex items-center justify-center shrink-0">
-          AC
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 text-slate-950 font-black flex items-center justify-center shadow-lg shadow-amber-500/20">
+          MK
         </div>
-        <div class="truncate">
+        <div>
           <div class="flex items-center gap-2">
-            <span class="font-bold text-white truncate">AutoClip Project Studio</span>
-            <span class="text-[11px] px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
-              1080×1920
+            <span class="font-extrabold tracking-tight text-white">Klip Studio</span>
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-amber-400/15 text-amber-300 border border-amber-400/30">
+              9:16 Clipper
             </span>
           </div>
-          <p class="text-xs text-slate-400 truncate">Kelola klip, hook, dan pemicu GitHub Actions</p>
+          <p class="text-[11px] text-slate-400 hidden sm:block">Satu video panjang, potongan vertikal siap posting</p>
         </div>
       </div>
 
-      <div class="text-xs px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
-        Total Klip: <strong id="clipCount" class="text-cyan-300">0</strong>
+      <div class="flex items-center gap-2 text-xs">
+        <span class="px-3 py-1.5 rounded-xl bg-surface border border-slate-800 text-slate-300">
+          Klip Dibuat: <strong id="totalClipsBadge" class="text-amber-300">0</strong>
+        </span>
       </div>
     </div>
   </header>
 
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-7 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-    <section class="lg:col-span-5 space-y-6">
-      <div class="rounded-2xl bg-card border border-slate-800 p-5 space-y-4">
-        <h2 class="text-base font-bold text-white">1. Konfigurasi Sumber & GitHub</h2>
-
-        <div>
-          <label for="srcUrl" class="block text-xs font-medium text-slate-400 mb-1">URL Video Sumber</label>
-          <input
-            id="srcUrl"
-            type="url"
-            placeholder="https://www.youtube.com/watch?v=..."
-            class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400"
-          />
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+    <!-- Hero Banner -->
+    <section class="rounded-3xl border border-slate-800 bg-gradient-to-br from-surface via-surface to-amber-950/20 p-6 sm:p-8 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+      <div class="max-w-2xl space-y-3">
+        <div class="inline-flex items-center gap-2 text-xs font-semibold px-3 py-1 rounded-full bg-amber-400/10 text-amber-300 border border-amber-400/25">
+          <span>🎬</span> Tempel Link • Atur Detik & Hook • Render 9:16
         </div>
-
-        <details class="rounded-xl bg-slate-950/70 border border-slate-800 p-3.5">
-          <summary class="cursor-pointer text-xs font-semibold text-slate-200 select-none">
-            Pengaturan Repository & PAT (Opsional)
-          </summary>
-          <div class="mt-3 grid grid-cols-2 gap-2.5 text-xs">
-            <div>
-              <label for="ghOwner" class="block text-slate-400 mb-1">Owner</label>
-              <input id="ghOwner" type="text" placeholder="username" class="w-full rounded-lg bg-slate-900 border border-slate-700 px-2.5 py-1.5 text-white" />
-            </div>
-            <div>
-              <label for="ghRepo" class="block text-slate-400 mb-1">Repo</label>
-              <input id="ghRepo" type="text" value="Autoclip" class="w-full rounded-lg bg-slate-900 border border-slate-700 px-2.5 py-1.5 text-white" />
-            </div>
-            <div>
-              <label for="ghWorkflow" class="block text-slate-400 mb-1">Workflow File</label>
-              <input id="ghWorkflow" type="text" value="autoclip.yml" class="w-full rounded-lg bg-slate-900 border border-slate-700 px-2.5 py-1.5 text-white" />
-            </div>
-            <div>
-              <label for="ghToken" class="block text-slate-400 mb-1">GitHub PAT</label>
-              <input id="ghToken" type="password" placeholder="github_pat_..." class="w-full rounded-lg bg-slate-900 border border-slate-700 px-2.5 py-1.5 text-white" />
-            </div>
-          </div>
-        </details>
+        <h1 class="text-2xl sm:text-4xl font-black tracking-tight text-white leading-tight">
+          Ubah Video Panjang Jadi Klip Pendek Siap Viral
+        </h1>
+        <p class="text-sm sm:text-base text-slate-400 leading-relaxed">
+          Masukkan tautan video (YouTube, TikTok, atau IG), pilih mode potongan, tambahkan <em>hook</em> pembuka, dan jalankan proses otomatis lewat GitHub Actions.
+        </p>
       </div>
 
-      <form id="addClipForm" class="rounded-2xl bg-card border border-slate-800 p-5 space-y-4">
-        <h2 class="text-base font-bold text-white">2. Tambah Segmen Klip</h2>
-
-        <div>
-          <label for="clipTitle" class="block text-xs font-medium text-slate-400 mb-1">Judul Klip</label>
-          <input
-            id="clipTitle"
-            type="text"
-            required
-            placeholder="Contoh: Momen paling seru"
-            class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400"
-          />
+      <div class="grid grid-cols-3 gap-3 shrink-0 text-center">
+        <div class="rounded-2xl bg-bgdark/80 border border-slate-800 px-4 py-3">
+          <div class="text-base sm:text-lg font-extrabold text-amber-300">9:16</div>
+          <div class="text-[11px] text-slate-400">Shorts / Reels</div>
         </div>
-
-        <div>
-          <label for="hookText" class="block text-xs font-medium text-slate-400 mb-1">Teks Hook Awal (5 detik pertama, opsional)</label>
-          <input
-            id="hookText"
-            type="text"
-            placeholder="Contoh: WAJIB NONTON SAMPAI HABIS!"
-            class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400"
-          />
+        <div class="rounded-2xl bg-bgdark/80 border border-slate-800 px-4 py-3">
+          <div class="text-base sm:text-lg font-extrabold text-sky-300">1080p</div>
+          <div class="text-[11px] text-slate-400">Output HD</div>
         </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label for="startSec" class="block text-xs font-medium text-slate-400 mb-1">Mulai (detik)</label>
-            <input id="startSec" type="number" min="0" value="15" required class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2 text-sm text-white" />
-          </div>
-          <div>
-            <label for="durationSec" class="block text-xs font-medium text-slate-400 mb-1">Durasi (detik)</label>
-            <input id="durationSec" type="number" min="1" max="600" value="45" required class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2 text-sm text-white" />
-          </div>
+        <div class="rounded-2xl bg-bgdark/80 border border-slate-800 px-4 py-3">
+          <div class="text-base sm:text-lg font-extrabold text-emerald-300">FFmpeg</div>
+          <div class="text-[11px] text-slate-400">Auto Crop</div>
         </div>
-
-        <button
-          type="submit"
-          class="w-full rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-500 hover:opacity-95 text-slate-950 font-bold text-sm py-2.5 transition cursor-pointer"
-        >
-          + Simpan Klip ke Daftar
-        </button>
-      </form>
-    </section>
-
-    <section class="lg:col-span-7 rounded-2xl bg-card border border-slate-800 p-5 sm:p-6 space-y-5">
-      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
-        <div>
-          <h2 class="text-lg font-bold text-white">Daftar Klip Proyek</h2>
-          <p class="text-xs text-slate-400">Jalankan langsung ke GitHub Actions atau salin perintah CLI.</p>
-        </div>
-        <button id="clearAllBtn" type="button" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-rose-950/60 border border-slate-700 text-xs font-medium text-rose-300 cursor-pointer">
-          Reset Daftar
-        </button>
-      </div>
-
-      <div id="clipsContainer" class="space-y-3"></div>
-
-      <div id="outputBox" class="hidden rounded-xl bg-slate-950 border border-slate-800 p-4 space-y-2">
-        <div id="outputLabel" class="text-xs font-semibold text-cyan-300"></div>
-        <pre id="outputContent" class="text-xs font-mono text-slate-300 overflow-x-auto whitespace-pre-wrap"></pre>
       </div>
     </section>
+
+    <!-- Main Studio Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <!-- Left Input & Builder (5 cols) -->
+      <section class="lg:col-span-5 space-y-6">
+        <form id="studioForm" class="rounded-3xl bg-surface border border-slate-800 p-6 space-y-5 shadow-xl">
+          <div class="border-b border-slate-800 pb-3.5">
+            <h2 class="text-lg font-bold text-white">Buat Klip Baru</h2>
+            <p class="text-xs text-slate-400 mt-0.5">Atur sumber video, mode, rentang detik, dan hook.</p>
+          </div>
+
+          <!-- URL -->
+          <div>
+            <label for="videoUrl" class="block text-xs font-semibold text-slate-300 mb-1.5">
+              Link Video (YouTube / Livestream / TikTok / IG)
+            </label>
+            <input
+              id="videoUrl"
+              type="url"
+              required
+              placeholder="https://www.youtube.com/watch?v=..."
+              class="w-full rounded-xl bg-bgdark border border-slate-700 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+            />
+          </div>
+
+          <!-- Mode & Preset Durasi -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="modeSelect" class="block text-xs font-semibold text-slate-300 mb-1.5">Mode Klip</label>
+              <select id="modeSelect" class="w-full rounded-xl bg-bgdark border border-slate-700 px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400">
+                <option value="Clipper Highlight">Clipper Highlight</option>
+                <option value="Story Recap">Story Recap</option>
+                <option value="Sports Highlight">Sports Highlight</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="presetDurasi" class="block text-xs font-semibold text-slate-300 mb-1.5">Preset Durasi</label>
+              <select id="presetDurasi" class="w-full rounded-xl bg-bgdark border border-slate-700 px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400">
+                <option value="30">30 Detik (Cepat)</option>
+                <option value="45" selected>45 Detik (Standar)</option>
+                <option value="60">60 Detik (Lengkap)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Start & Duration -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="mulaiDetik" class="block text-xs font-semibold text-slate-300 mb-1.5">Mulai (detik)</label>
+              <input id="mulaiDetik" type="number" min="0" value="15" required class="w-full rounded-xl bg-bgdark border border-slate-700 px-3.5 py-2 text-sm text-white" />
+            </div>
+            <div>
+              <label for="durasiDetik" class="block text-xs font-semibold text-slate-300 mb-1.5">Durasi (detik)</label>
+              <input id="durasiDetik" type="number" min="1" max="600" value="45" required class="w-full rounded-xl bg-bgdark border border-slate-700 px-3.5 py-2 text-sm text-white" />
+            </div>
+          </div>
+
+          <!-- Judul & Hook -->
+          <div>
+            <label for="judulKlip" class="block text-xs font-semibold text-slate-300 mb-1.5">Judul Klip</label>
+            <input
+              id="judulKlip"
+              type="text"
+              required
+              placeholder="Contoh: Momen paling plot twist"
+              class="w-full rounded-xl bg-bgdark border border-slate-700 px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+            />
+          </div>
+
+          <div>
+            <label for="hookText" class="block text-xs font-semibold text-slate-300 mb-1.5">Teks Hook (5 detik awal, opsional)</label>
+            <input
+              id="hookText"
+              type="text"
+              placeholder="Contoh: Jangan skip bagian ini!"
+              class="w-full rounded-xl bg-bgdark border border-slate-700 px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+            />
+          </div>
+
+          <!-- GitHub Config Collapsible -->
+          <details class="rounded-2xl bg-bgdark/80 border border-slate-800 p-4">
+            <summary class="cursor-pointer text-xs font-semibold text-slate-200 select-none">
+              Koneksi GitHub Actions (Opsional)
+            </summary>
+            <div class="mt-3 grid grid-cols-2 gap-2.5 text-xs">
+              <div>
+                <label for="ghOwner" class="block text-slate-400 mb-1">Owner</label>
+                <input id="ghOwner" type="text" placeholder="username" class="w-full rounded-lg bg-surface border border-slate-700 px-2.5 py-1.5 text-white" />
+              </div>
+              <div>
+                <label for="ghRepo" class="block text-slate-400 mb-1">Repository</label>
+                <input id="ghRepo" type="text" value="Autoclip" class="w-full rounded-lg bg-surface border border-slate-700 px-2.5 py-1.5 text-white" />
+              </div>
+              <div>
+                <label for="ghWorkflow" class="block text-slate-400 mb-1">File Workflow</label>
+                <input id="ghWorkflow" type="text" value="autoclip.yml" class="w-full rounded-lg bg-surface border border-slate-700 px-2.5 py-1.5 text-white" />
+              </div>
+              <div>
+                <label for="ghToken" class="block text-slate-400 mb-1">GitHub PAT</label>
+                <input id="ghToken" type="password" placeholder="github_pat_..." class="w-full rounded-lg bg-surface border border-slate-700 px-2.5 py-1.5 text-white" />
+              </div>
+            </div>
+          </details>
+
+          <button
+            type="submit"
+            class="w-full rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 hover:opacity-95 text-slate-950 font-extrabold text-sm py-3 transition cursor-pointer shadow-lg shadow-amber-500/20"
+          >
+            + Tambahkan Klip ke Workspace
+          </button>
+        </form>
+      </section>
+
+      <!-- Right Project Clips List (7 cols) -->
+      <section class="lg:col-span-7 rounded-3xl bg-surface border border-slate-800 p-6 space-y-5 shadow-xl">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
+          <div>
+            <h2 class="text-lg font-bold text-white">Klip Terkurasi di Proyek</h2>
+            <p class="text-xs text-slate-400">Picu langsung ke GitHub Actions atau salin perintah CLI.</p>
+          </div>
+          <button id="resetBtn" type="button" class="px-3 py-1.5 rounded-xl bg-bgdark hover:bg-rose-950/60 border border-slate-700 text-xs font-medium text-rose-300 cursor-pointer">
+            Bersihkan Semua
+          </button>
+        </div>
+
+        <div id="clipList" class="space-y-3"></div>
+
+        <div id="logBox" class="hidden rounded-2xl bg-bgdark border border-slate-800 p-4 space-y-2">
+          <div id="logTitle" class="text-xs font-bold text-amber-300"></div>
+          <pre id="logBody" class="text-xs font-mono text-slate-300 overflow-x-auto whitespace-pre-wrap"></pre>
+        </div>
+      </section>
+    </div>
   </main>
 
   <script>
-    const STORAGE_KEY = 'autoclip_studio_items_v1';
-    const clipsContainer = document.getElementById('clipsContainer');
-    const clipCount = document.getElementById('clipCount');
-    const addClipForm = document.getElementById('addClipForm');
-    const outputBox = document.getElementById('outputBox');
-    const outputLabel = document.getElementById('outputLabel');
-    const outputContent = document.getElementById('outputContent');
-    const clearAllBtn = document.getElementById('clearAllBtn');
+    const KEY = 'klip_studio_workspace_v1';
+    const form = document.getElementById('studioForm');
+    const presetSelect = document.getElementById('presetDurasi');
+    const durasiInput = document.getElementById('durasiDetik');
+    const clipList = document.getElementById('clipList');
+    const badge = document.getElementById('totalClipsBadge');
+    const logBox = document.getElementById('logBox');
+    const logTitle = document.getElementById('logTitle');
+    const logBody = document.getElementById('logBody');
+    const resetBtn = document.getElementById('resetBtn');
 
-    function loadClips() {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    presetSelect.addEventListener('change', () => {
+      durasiInput.value = presetSelect.value;
+    });
+
+    function readItems() {
+      return JSON.parse(localStorage.getItem(KEY) || '[]');
     }
 
-    function saveClips(list) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-      renderClips();
+    function writeItems(arr) {
+      localStorage.setItem(KEY, JSON.stringify(arr));
+      render();
     }
 
-    function escapeHtml(str) {
-      return String(str).replace(/[&<>"']/g, (m) => ({
+    function esc(s) {
+      return String(s).replace(/[&<>"']/g, (c) => ({
         '&': '&', '<': '<', '>': '>', '"': '"', "'": '''
-      }[m]));
+      }[c]));
     }
 
-    function showOutput(title, text, colorClass = 'text-cyan-300') {
-      outputBox.classList.remove('hidden');
-      outputLabel.className = `text-xs font-semibold ${colorClass}`;
-      outputLabel.textContent = title;
-      outputContent.textContent = text;
+    function showLog(title, body, color = 'text-amber-300') {
+      logBox.classList.remove('hidden');
+      logTitle.className = `text-xs font-bold ${color}`;
+      logTitle.textContent = title;
+      logBody.textContent = body;
     }
 
-    function renderClips() {
-      const clips = loadClips();
-      clipCount.textContent = String(clips.length);
+    function render() {
+      const items = readItems();
+      badge.textContent = String(items.length);
 
-      if (!clips.length) {
-        clipsContainer.innerHTML = `
-          <div class="rounded-xl bg-slate-950/70 border border-dashed border-slate-800 p-8 text-center text-sm text-slate-500">
-            Belum ada klip. Tambahkan klip di panel sebelah kiri.
+      if (!items.length) {
+        clipList.innerHTML = `
+          <div class="rounded-2xl bg-bgdark/70 border border-dashed border-slate-800 p-8 text-center text-sm text-slate-500">
+            Belum ada klip yang ditambahkan. Isi form di sebelah kiri untuk membuat klip pertama.
           </div>`;
         return;
       }
 
-      clipsContainer.innerHTML = clips.map((c, idx) => {
-        const endSec = Number(c.start) + Number(c.duration);
+      clipList.innerHTML = items.map((item, i) => {
+        const end = Number(item.start) + Number(item.duration);
         return `
-          <article class="rounded-xl bg-card2 border border-slate-800 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <article class="rounded-2xl bg-surface2 border border-slate-800 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div class="space-y-1 min-w-0">
               <div class="flex flex-wrap items-center gap-2 text-[11px]">
-                <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-semibold">#${idx + 1}</span>
-                <span class="text-cyan-300 font-mono">${c.start}s → ${endSec}s (${c.duration}s)</span>
-                ${c.hook ? `<span class="text-amber-300">• Hook: "${escapeHtml(c.hook)}"</span>` : ''}
+                <span class="px-2 py-0.5 rounded-md bg-amber-400/15 text-amber-300 font-bold">#${i + 1}</span>
+                <span class="font-mono text-sky-300">${item.start}s → ${end}s (${item.duration}s)</span>
+                <span class="text-slate-400">• ${esc(item.mode)}</span>
+                <span class="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 font-semibold">Skor ${item.score}/100</span>
               </div>
-              <h3 class="text-sm font-bold text-white truncate">${escapeHtml(c.title)}</h3>
-              <p class="text-xs text-slate-400 truncate">${escapeHtml(c.url || 'URL kosong')}</p>
+              <h3 class="text-sm font-bold text-white truncate">${esc(item.title)}</h3>
+              ${item.hook ? `<p class="text-xs text-amber-200/90 truncate">Hook: "${esc(item.hook)}"</p>` : ''}
+              <p class="text-xs text-slate-400 truncate">${esc(item.url)}</p>
             </div>
 
             <div class="flex flex-wrap items-center gap-2 shrink-0">
-              <button
-                type="button"
-                onclick="triggerClip(${idx})"
-                class="px-3 py-1.5 rounded-lg bg-indigo-500 hover:bg-indigo-400 text-slate-950 font-bold text-xs cursor-pointer"
-              >
-                Run Action
+              <button type="button" onclick="runClip(${i})" class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs cursor-pointer">
+                Jalankan
               </button>
-              <button
-                type="button"
-                onclick="copyCli(${idx})"
-                class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs text-slate-200 cursor-pointer"
-              >
+              <button type="button" onclick="copyCmd(${i})" class="px-3 py-1.5 rounded-xl bg-bgdark hover:bg-slate-800 border border-slate-700 text-xs text-slate-200 cursor-pointer">
                 CLI
               </button>
-              <button
-                type="button"
-                onclick="removeClip(${idx})"
-                class="px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-rose-950/60 border border-slate-700 text-xs text-rose-300 cursor-pointer"
-              >
+              <button type="button" onclick="delClip(${i})" class="px-2.5 py-1.5 rounded-xl bg-bgdark hover:bg-rose-950/60 border border-slate-700 text-xs text-rose-300 cursor-pointer">
                 Hapus
               </button>
             </div>
@@ -234,28 +297,28 @@
       }).join('');
     }
 
-    window.removeClip = function(idx) {
-      const clips = loadClips();
-      clips.splice(idx, 1);
-      saveClips(clips);
+    window.delClip = function(i) {
+      const items = readItems();
+      items.splice(i, 1);
+      writeItems(items);
     };
 
-    window.copyCli = async function(idx) {
-      const c = loadClips()[idx];
-      if (!c) return;
+    window.copyCmd = async function(i) {
+      const item = readItems()[i];
+      if (!item) return;
       const wf = document.getElementById('ghWorkflow').value.trim() || 'autoclip.yml';
-      const cmd = `gh workflow run ${wf} -f video_url="${c.url}" -f mulai_detik="${c.start}" -f durasi="${c.duration}" -f hook_text="${c.hook || ''}"`;
+      const cmd = `gh workflow run ${wf} -f video_url="${item.url}" -f mulai_detik="${item.start}" -f durasi="${item.duration}" -f hook_text="${item.hook || ''}"`;
       try {
         await navigator.clipboard.writeText(cmd);
-        showOutput('Perintah CLI disalin ke clipboard:', cmd, 'text-emerald-400');
+        showLog('Perintah GitHub CLI disalin:', cmd, 'text-emerald-400');
       } catch {
-        showOutput('Salin perintah CLI berikut:', cmd);
+        showLog('Salin perintah CLI berikut:', cmd);
       }
     };
 
-    window.triggerClip = async function(idx) {
-      const c = loadClips()[idx];
-      if (!c) return;
+    window.runClip = async function(i) {
+      const item = readItems()[i];
+      if (!item) return;
       const owner = document.getElementById('ghOwner').value.trim();
       const repo = document.getElementById('ghRepo').value.trim();
       const wf = document.getElementById('ghWorkflow').value.trim() || 'autoclip.yml';
@@ -264,23 +327,23 @@
       const payload = {
         ref: 'main',
         inputs: {
-          video_url: String(c.url || ''),
-          mulai_detik: String(c.start),
-          durasi: String(c.duration),
-          hook_text: String(c.hook || '')
+          video_url: item.url,
+          mulai_detik: String(item.start),
+          durasi: String(item.duration),
+          hook_text: item.hook || ''
         }
       };
 
       if (!owner || !repo || !token) {
-        showOutput(
-          'Lengkapi Owner, Repo, & PAT untuk memicu langsung, atau jalankan CLI ini:',
-          `gh workflow run ${wf} -f video_url="${c.url}" -f mulai_detik="${c.start}" -f durasi="${c.duration}" -f hook_text="${c.hook || ''}"`,
+        showLog(
+          'Lengkapi Owner, Repository, & PAT untuk memicu otomatis, atau jalankan CLI ini:',
+          `gh workflow run ${wf} -f video_url="${item.url}" -f mulai_detik="${item.start}" -f durasi="${item.duration}" -f hook_text="${item.hook || ''}"`,
           'text-amber-300'
         );
         return;
       }
 
-      showOutput('Mengirim workflow_dispatch ke GitHub...', JSON.stringify(payload, null, 2));
+      showLog('Mengirim permintaan workflow_dispatch...', JSON.stringify(payload, null, 2));
 
       try {
         const res = await fetch(
@@ -298,39 +361,41 @@
         );
 
         if (res.status === 204) {
-          showOutput('Berhasil dipicu! Cek tab Actions di repository GitHub Anda.', JSON.stringify(payload, null, 2), 'text-emerald-400');
+          showLog('Workflow berhasil dijalankan! Cek tab Actions di GitHub.', JSON.stringify(payload, null, 2), 'text-emerald-400');
         } else {
           const errJson = await res.json().catch(() => ({}));
-          showOutput(`Gagal memicu workflow (HTTP ${res.status}): ${errJson.message || 'Periksa token & nama workflow'}`, JSON.stringify(payload, null, 2), 'text-rose-400');
+          showLog(`Gagal (HTTP ${res.status}): ${errJson.message || 'Periksa token & nama workflow'}`, JSON.stringify(payload, null, 2), 'text-rose-400');
         }
-      } catch (err) {
-        showOutput(`Error jaringan: ${err.message}`, '', 'text-rose-400');
+      } catch (e) {
+        showLog(`Error jaringan: ${e.message}`, '', 'text-rose-400');
       }
     };
 
-    addClipForm.addEventListener('submit', (e) => {
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const url = document.getElementById('srcUrl').value.trim();
-      const title = document.getElementById('clipTitle').value.trim();
+      const url = document.getElementById('videoUrl').value.trim();
+      const mode = document.getElementById('modeSelect').value;
+      const start = Math.max(0, parseInt(document.getElementById('mulaiDetik').value || '15', 10));
+      const duration = Math.max(1, parseInt(durasiInput.value || '45', 10));
+      const title = document.getElementById('judulKlip').value.trim();
       const hook = document.getElementById('hookText').value.trim();
-      const start = Math.max(0, parseInt(document.getElementById('startSec').value || '15', 10));
-      const duration = Math.max(1, parseInt(document.getElementById('durationSec').value || '45', 10));
+      const score = Math.min(99, Math.max(72, 78 + ((start + duration + title.length) % 20)));
 
-      const clips = loadClips();
-      clips.unshift({ url, title, hook, start, duration });
-      saveClips(clips);
+      const items = readItems();
+      items.unshift({ url, mode, start, duration, title, hook, score });
+      writeItems(items);
 
-      document.getElementById('clipTitle').value = '';
+      document.getElementById('judulKlip').value = '';
       document.getElementById('hookText').value = '';
     });
 
-    clearAllBtn.addEventListener('click', () => {
-      localStorage.removeItem(STORAGE_KEY);
-      renderClips();
-      outputBox.classList.add('hidden');
+    resetBtn.addEventListener('click', () => {
+      localStorage.removeItem(KEY);
+      render();
+      logBox.classList.add('hidden');
     });
 
-    renderClips();
+    render();
   </script>
 </body>
 </html>
